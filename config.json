@@ -1,5 +1,5 @@
 {
-  "defaultMode": "hybrid",
+  "defaultMode": "swarm",
   "models": {
     "navigator": "gemini-4-hydrogen-medium",
     "advisor": "gemini-4-carbon-high",
