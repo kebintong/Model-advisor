@@ -1,172 +1,132 @@
-# Model Advisor
+<p align="center">
+  <img src="assets/logo.svg" alt="Model Advisor Logo" width="84" height="84" />
+</p>
 
-An always-on multi-model routing plugin for **Google Antigravity** inspired by the Advisor pattern — combining specialized model delegation (**Hydrogen**, **Carbon**, **Neon**), **lean senior-dev coding discipline** (minimal diffs, reuse first, dead-code removal), and a built-in **Customize UI** with zero runtime npm dependencies.
+<h1 align="center">Model Advisor</h1>
+
+<p align="center">
+  <strong>Split coding tasks across specialized AI models in Google Antigravity — with cleaner, smaller diffs and a built-in Customize UI.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Google-Antigravity_Plugin-6366F1?style=flat-square" alt="Antigravity Plugin" />
+  <img src="https://img.shields.io/badge/Dependencies-Zero-10B981?style=flat-square" alt="Zero Dependencies" />
+  <img src="https://img.shields.io/badge/License-MIT-0EA5E9?style=flat-square" alt="MIT License" />
+</p>
 
 ---
 
-## What It Is About
+## What Is Model Advisor?
 
-Instead of asking one model to read your whole repo, plan architecture, write code, and untangle stubborn build errors all at once, **Model Advisor** splits each phase to a specialist pinned via Antigravity's native `swarm` tool — while enforcing strict minimal-diff rules so multi-agent collaboration stays fast, focused, and bloat-free.
+Instead of making one AI model do everything, **Model Advisor** routes each step of a coding task to the best model for that job:
 
-It ships as one self-contained Antigravity plugin containing:
-- **Always-on routing rule** (`rules/AGENTS.md`) with automatic fast-path skipping for tiny 1–5 line edits
-- **Mode slash commands** (`/model-advisor-hybrid`, `/model-advisor-swarm`, `/model-advisor-default`)
-- **Lean-code discipline** baked into every worker brief
-- **Interactive Customize UI** (Side Pane `+` menu & Left Sidebar) synced two-way with `config.json` at **0 LLM token cost**
+- **Hydrogen** quickly scouts your codebase (read-only)
+- **Carbon** plans the cleanest approach and fixes stubborn bugs (read-only)
+- **Neon** writes the code and runs tests (exclusive file writer)
+
+It also enforces **lean-code discipline** — reusing existing code, keeping diffs small, and removing unused lines automatically.
+
+<p align="center">
+  <img src="assets/workflow.svg" alt="Model Advisor Workflow: Navigator (Hydrogen) -> Advisor (Carbon) -> Coder (Neon)" width="100%" />
+</p>
 
 ---
 
-## How It Works
+## Live Preview in Antigravity
 
-```mermaid
-flowchart LR
-    U["User Task"] --> C["Coordinator (Main Chat)"]
-    C -->|"1. Scope, callers, helpers & dead code"| N["@navigator · Hydrogen (Medium)\nRead-only"]
-    N --> C
-    C -->|"2. Minimal plan & edge cases"| A["@advisor · Carbon (High)\nRead-only"]
-    A --> C
-    C -->|"3. Smallest diff + tests"| K["@coder · Neon (Medium)\nExclusive Writer"]
-    K -->|"Fails twice or non-obvious error"| A
-    K -->|"Passes checks"| C
-```
+When working on a real task, Antigravity's **Swarm Overview** shows each specialist completing its part:
 
-### Roles & Default Models
+<p align="center">
+  <img src="assets/swarm-preview.png" alt="Model Advisor running in Antigravity Swarm Overview" width="760" />
+</p>
 
-| Member | Default Model ID | Access | Responsibility |
-| :--- | :--- | :--- | :--- |
-| **Coordinator** | Main chat | Orchestrates *(codes in `hybrid` if on Neon)* | Manages context handoffs, updates Swarm Overview (`plan.json`), verifies results, and reports concisely. |
-| **`@navigator`** | `gemini-4-hydrogen-medium` | **Read-only** | Fast codebase scout — maps target files & line ranges, impacted callers/tests/exports, reusable repo helpers, and dead code. |
-| **`@advisor`** | `gemini-4-carbon-high` | **Read-only** | Deep planner & debugger — designs the smallest complete diff, catches risks, and diagnoses root causes after 2 failed fix attempts. |
-| **`@coder`** | `gemini-4-neon-medium` | **Exclusive writer** | Implements `@advisor`'s minimal diff, deletes listed dead code, and runs build/test verification. Only `@coder` edits files. |
+---
 
-### Operating Modes (Sticky per Session)
+## Why Use It?
 
-| Command | Mode | What It Does |
+- **Faster & smarter split:** Cheap, fast reading (`Hydrogen`), deep thinking (`Carbon`), and quick coding (`Neon`).
+- **Less code bloat:** Built-in lean rules stop AI from over-engineering or leaving dead code behind.
+- **No endless bug loops:** If a build or test fails twice, Neon stops guessing and asks Carbon for the root cause.
+- **No merge headaches:** Only `@coder` edits files, so workers never conflict.
+- **Free when idle:** Sleeping workers cost 0 tokens while remembering your codebase and plan.
+- **Built-in Customize UI (0 token cost):** Change models or modes anytime from Antigravity's Side Pane or Left Sidebar.
+
+---
+
+## Modes at a Glance
+
+Type `/model-advisor` in chat to switch modes anytime (sticks for the rest of the session):
+
+| Command | Best For | How It Runs |
 | :--- | :--- | :--- |
-| `/model-advisor-hybrid` *(or `/model-advisor`)* | **Hybrid** *(default)* | Main chat codes directly on Neon; `@navigator` (Hydrogen) and `@advisor` (Carbon) run as read-only swarm workers. Falls back to spawning `@coder` if main chat is on another model. |
-| `/model-advisor-swarm` | **3-Worker Swarm** | Main chat coordinates only (never edits files). Delegates to all 3 separate pinned workers (`@navigator`, `@advisor`, `@coder`). |
-| `/model-advisor-default` | **Default** | Single-model direct mode. Spawns no workers; main chat handles everything while keeping lean-code rules active. |
+| `/model-advisor-hybrid` *(default)* | Everyday coding | Your main chat codes on **Neon**; **Hydrogen** & **Carbon** help in the background. |
+| `/model-advisor-swarm` | Big refactors or using another main model | Main chat only manages; all 3 roles run as separate workers. |
+| `/model-advisor-default` | Quick changes / normal chat | Turns off multi-model workers while keeping lean-code rules. |
 
-- **Fast-path skip:** Trivial 1–5 line edits and pure Q&A bypass workers automatically unless you explicitly invoke `/model-advisor-hybrid` or `/model-advisor-swarm`.
-- **Live Indicators:** Shows the active model in Antigravity's status label (`Hydrogen (med): navigating codebase`), populates friendly outcome-grouped threads in the built-in **Swarm Overview**, and appends a 1-line model trail to replies.
-
----
-
-## Benefits
-
-- **Right model for every phase:** Fast scout for reading (`Hydrogen`), deep reasoning for planning & debugging (`Carbon`), and fast execution for edits (`Neon`).
-- **Prevents multi-agent over-engineering:** Built-in lean-code rules prioritize reusing existing helpers/stdlib, deleting dead code, and shipping the shortest readable working diff — without cutting security, validation, or data-loss handling.
-- **Breaks debugging loops automatically:** After 2 failed fix attempts (or any non-obvious failure), execution stops guessing and escalates the failing command, trace, and diff to `@advisor` for a root-cause fix.
-- **Zero-cost idle workers:** Swarm workers sleep in `waiting` state between turns at 0 cost while retaining codebase and plan memory.
-- **Live Customize UI at 0 token cost:** Change default mode, toggle lean-code rules, or swap any role's model ID from the Side Pane or Left Sidebar; changes persist to `config.json` over local stdio without calling an LLM.
-- **Single-writer safety:** Because only `@coder` has write access on `workspace: "inherit"`, there are no merge conflicts or worktree cleanup headaches.
+> **Tip:** Tiny 1–5 line edits and regular questions automatically skip workers so you never wait unnecessarily.
 
 ---
 
 ## Sample Use Cases
 
-### 1. Building a New Feature (`hybrid` — Automatic)
-Set your main chat to **Gemini 4 Neon (Medium)** and prompt normally:
-```text
-Add rate limiting to the /api/login endpoint and cover it with tests.
-```
-1. `@navigator` (Hydrogen) maps the auth router, existing middleware helpers, and test setup.
-2. `@advisor` (Carbon) produces a minimal step-by-step plan reusing existing middleware and flagging edge cases.
-3. Main chat (Neon) applies the minimal diff and runs the test suite.
-
-### 2. Escaping a Stubborn Build or Test Error
-During implementation, tests fail twice with an unfamiliar error:
-1. Neon stops iterating blindly and hands the failing command, stack trace, and current diff to `@advisor` (Carbon).
-2. Carbon identifies the root cause in 2–3 sentences and returns the smallest shared-code fix.
-3. Neon applies the patch and confirms tests pass.
-
-### 3. Refactoring & Dead-Code Cleanup (`swarm`)
-Force full 3-worker separation regardless of your main chat model:
-```text
-/model-advisor-swarm Refactor billing checkout to use the shared currency helper and remove unused legacy formatters.
-```
-- Main chat orchestrates only; `@navigator` finds all callers and unused formatters, `@advisor` plans the safe deletion + refactor, and `@coder` executes and verifies.
-
-### 4. Quick Single-Model Bypass (`default`)
-Skip workers entirely for rapid back-and-forth exploration or small changes while keeping minimal diffs:
-```text
-/model-advisor-default Rename the sidebar button label and update its snapshot test.
-```
+- **Build a feature** *(automatic in Hybrid mode)*:
+  > *"Add rate limiting to `/api/login` and add a test."*
+  > Hydrogen finds the auth files → Carbon designs the smallest plan → Neon writes the code and runs tests.
+- **Fix a stubborn error**:
+  > When tests fail twice, Neon pauses and hands the error + diff to Carbon, who pinpoints the root cause and smallest fix.
+- **Clean up & refactor**:
+  > `/model-advisor-swarm Refactor checkout to reuse the currency helper and delete unused formatters.`
+- **Quick single-model edit**:
+  > `/model-advisor-default Rename the sidebar button label.`
 
 ---
 
-## Installation Guide
+## Installation
 
-### Prerequisites
-- **Google Antigravity** (App, IDE, or CLI `agy`)
-- **Git** (to clone this repository)
-- **Node.js 18+** on `PATH` *(optional — required only for the built-in Customize UI MCP server; skills and routing rules work without Node)*
+### Quick Install (1 Minute)
 
-#### How to Install Prerequisites
-
-**1. Google Antigravity**
-- Download and install Antigravity from [antigravity.google](https://antigravity.google), then launch and sign in.
-
-**2. Git**
-- **Windows (PowerShell):**
-  ```powershell
-  winget install --id Git.Git -e --source winget
-  ```
-- **macOS (Homebrew):**
-  ```bash
-  brew install git
-  ```
-- **Linux (Ubuntu / Debian):**
-  ```bash
-  sudo apt update && sudo apt install -y git
-  ```
-- Verify: `git --version`
-
-**3. Node.js 18+ *(for the Customize UI)***
-- **Windows (PowerShell):**
-  ```powershell
-  winget install --id OpenJS.NodeJS.LTS -e --source winget
-  ```
-  *(Or download the LTS installer from [nodejs.org](https://nodejs.org) and restart your terminal.)*
-- **macOS (Homebrew):**
-  ```bash
-  brew install node
-  ```
-- **Linux (Ubuntu / Debian):**
-  ```bash
-  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs
-  ```
-- Verify: `node -v` *(must be `v18.0.0` or newer)*
-
-### Option A: Install via Antigravity CLI *(Recommended)*
+**Using Antigravity CLI:**
 ```bash
 git clone https://github.com/kebintong/Model-advisor.git
 agy plugin install ./Model-advisor
 ```
 
-### Option B: Manual Global Install
-Clone directly into Antigravity's global plugins folder (auto-discovered live, no restart required):
+**Or copy directly into Antigravity's global plugins folder** *(loads automatically, no restart needed)*:
 
-**Windows (PowerShell):**
-```powershell
-git clone https://github.com/kebintong/Model-advisor.git "$HOME\.gemini\config\plugins\model-advisor"
-```
+- **Windows (PowerShell):**
+  ```powershell
+  git clone https://github.com/kebintong/Model-advisor.git "$HOME\.gemini\config\plugins\model-advisor"
+  ```
+- **macOS / Linux:**
+  ```bash
+  git clone https://github.com/kebintong/Model-advisor.git ~/.gemini/config/plugins/model-advisor
+  ```
 
-**macOS / Linux:**
-```bash
-git clone https://github.com/kebintong/Model-advisor.git ~/.gemini/config/plugins/model-advisor
-```
+<details>
+<summary><strong>Need Prerequisites? Click to expand (Antigravity, Git, Node.js 18+)</strong></summary>
 
-### Verify & Toggle
-1. Open **Customizations → Plugins → Model Advisor** in Antigravity to verify it is enabled (you can toggle Always-On behavior live with one click).
-2. Open the Customize UI via **`+` in the Side Pane → Model Advisor** or **Model Advisor** in the Left Sidebar.
-3. Type `/model-advisor` in chat to see the 4 registered commands (`model-advisor`, `model-advisor-hybrid`, `model-advisor-swarm`, `model-advisor-default`).
+1. **Google Antigravity** — Download and sign in at [antigravity.google](https://antigravity.google).
+2. **Git** — Verify with `git --version`:
+   - Windows: `winget install --id Git.Git -e --source winget`
+   - macOS: `brew install git`
+   - Linux (Ubuntu/Debian): `sudo apt update && sudo apt install -y git`
+3. **Node.js 18+** *(optional — only needed for the Customize UI panel)* — Verify with `node -v`:
+   - Windows: `winget install --id OpenJS.NodeJS.LTS -e --source winget` *(or [nodejs.org](https://nodejs.org))*
+   - macOS: `brew install node`
+   - Linux (Ubuntu/Debian): `curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs`
+
+</details>
 
 ---
 
-## Customization
+## Customize Your Models
 
-Edit settings from the **Model Advisor** Side Pane / Sidebar UI, via chat (*"change advisor to Carbon Medium"*), or directly in `config.json`:
+Open **Model Advisor** from the **Left Sidebar** or **`+` in the Side Pane** to pick any model for each role, switch active mode, or toggle lean-code rules. Changes save directly to `config.json` with zero AI token usage.
+
+You can also just ask in chat (e.g., *"change advisor to Carbon Medium"*).
+
+<details>
+<summary><strong>Manual <code>config.json</code> &amp; Plugin Structure</strong></summary>
 
 ```json
 {
@@ -180,33 +140,21 @@ Edit settings from the **Model Advisor** Side Pane / Sidebar UI, via chat (*"cha
 }
 ```
 
-> **Using different models?** The UI dropdown includes Gemini 4 (Hydrogen, Carbon, Neon, Argon), Claude 5.5 (Opus, Sonnet), Gemini 3.8 Flash, GPT-OSS, plus a **Custom model ID** input — so you can point any role to whichever models your Antigravity account provides.
-
----
-
-## Plugin Structure
-
 ```text
 model-advisor/
 ├── plugin.json                        # Plugin manifest
-├── config.json                        # Active mode, role models, lean-code toggle
-├── mcp_config.json                    # Registers local Customize UI MCP App server
-├── assets/
-│   └── logo.svg                       # Plugin icon
-├── rules/
-│   └── AGENTS.md                      # Always-on routing & lean-code rule
-├── server/
-│   ├── server.mjs                     # Zero-dependency Node.js stdio MCP server
-│   └── app.html                       # Pre-bundled single-file MCP App UI
-└── skills/
-    ├── model-advisor/SKILL.md         # Core workflow, brief templates & Swarm Overview rules
-    ├── model-advisor-hybrid/SKILL.md  # /model-advisor-hybrid
-    ├── model-advisor-swarm/SKILL.md   # /model-advisor-swarm
-    └── model-advisor-default/SKILL.md # /model-advisor-default
+├── config.json                        # Saved mode, role models & lean-code toggle
+├── mcp_config.json                    # Connects the Customize UI MCP App
+├── assets/                            # Plugin icon, workflow graphic & preview
+├── rules/AGENTS.md                    # Always-on routing & lean-code rule
+├── server/                            # Zero-dependency Node server + bundled UI
+└── skills/                            # Core skill + /model-advisor-{hybrid,swarm,default}
 ```
+
+</details>
 
 ---
 
 ## License
 
-MIT
+[MIT](LICENSE)

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 280" width="880" height="280" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="880" y2="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#94A3B8"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B"/>
+    </marker>
+  </defs>
+
+  <!-- Outer container (looks crisp on both GitHub light and dark themes) -->
+  <rect x="1" y="1" width="878" height="278" rx="16" fill="url(#bg)" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text x="32" y="38" fill="#F8FAFC" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="16" font-weight="700">How Model Advisor Splits the Work</text>
+  <text x="848" y="38" text-anchor="end" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">Minimal diffs · Dead-code cleanup · 1 writer</text>
+
+  <!-- Step 1: Navigator (Hydrogen) -->
+  <rect x="32" y="62" width="240" height="134" rx="12" fill="#1E293B" stroke="#0EA5E9" stroke-width="1.5"/>
+  <rect x="46" y="76" width="66" height="22" rx="11" fill="#0EA5E9" fill-opacity="0.18"/>
+  <text x="79" y="91" text-anchor="middle" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="11" font-weight="700">STEP 1</text>
+  <text x="256" y="91" text-anchor="end" fill="#94A3B8" font-family="ui-monospace, Consolas, monospace" font-size="11">read-only</text>
+  <text x="46" y="121" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="700">@navigator</text>
+  <text x="46" y="141" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Hydrogen (Medium)</text>
+  <text x="46" y="164" fill="#CBD5E1" font-family="system-ui, sans-serif" font-size="12">Finds target files, callers,</text>
+  <text x="46" y="180" fill="#CBD5E1" font-family="system-ui, sans-serif" font-size="12">reusable helpers &amp; dead code.</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="274" y1="129" x2="314" y2="129" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 2: Advisor (Carbon) -->
+  <rect x="320" y="62" width="240" height="134" rx="12" fill="#1E293B" stroke="#818CF8" stroke-width="1.5"/>
+  <rect x="334" y="76" width="66" height="22" rx="11" fill="#818CF8" fill-opacity="0.18"/>
+  <text x="367" y="91" text-anchor="middle" fill="#A5B4FC" font-family="system-ui, sans-serif" font-size="11" font-weight="700">STEP 2</text>
+  <text x="544" y="91" text-anchor="end" fill="#94A3B8" font-family="ui-monospace, Consolas, monospace" font-size="11">read-only</text>
+  <text x="334" y="121" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="700">@advisor</text>
+  <text x="334" y="141" fill="#A5B4FC" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Carbon (High)</text>
+  <text x="334" y="164" fill="#CBD5E1" font-family="system-ui, sans-serif" font-size="12">Plans the smallest complete</text>
+  <text x="334" y="180" fill="#CBD5E1" font-family="system-ui, sans-serif" font-size="12">diff &amp; catches edge cases.</text>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="562" y1="129" x2="602" y2="129" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 3: Coder (Neon) -->
+  <rect x="608" y="62" width="240" height="134" rx="12" fill="#1E293B" stroke="#10B981" stroke-width="1.5"/>
+  <rect x="622" y="76" width="66" height="22" rx="11" fill="#10B981" fill-opacity="0.18"/>
+  <text x="655" y="91" text-anchor="middle" fill="#34D399" font-family="system-ui, sans-serif" font-size="11" font-weight="700">STEP 3</text>
+  <text x="832" y="91" text-anchor="end" fill="#34D399" font-family="ui-monospace, Consolas, monospace" font-size="11">only writer</text>
+  <text x="622" y="121" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="700">@coder</text>
+  <text x="622" y="141" fill="#34D399" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Neon (Medium)</text>
+  <text x="622" y="164" fill="#CBD5E1" font-family="system-ui, sans-serif" font-size="12">Writes clean code, deletes</text>
+  <text x="622" y="180" fill="#CBD5E1" font-family="system-ui, sans-serif" font-size="12">unused lines &amp; runs tests.</text>
+
+  <!-- Error Escalation Loop (Coder -> Advisor) -->
+  <path d="M 728 198 L 728 232 Q 728 242 718 242 L 450 242 Q 440 242 440 232 L 440 202" stroke="#F59E0B" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-warn)"/>
+  <rect x="494" y="229" width="180" height="24" rx="12" fill="#1E293B" stroke="#F59E0B" stroke-width="1.2"/>
+  <text x="584" y="245" text-anchor="middle" fill="#FBBF24" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Stuck after 2 fails? Auto-fix</text>
+
+  <!-- Fast-path badge -->
+  <rect x="32" y="224" width="356" height="32" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+  <text x="48" y="244" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12"><tspan fill="#34D399" font-weight="700">Fast-path:</tspan> 1–5 line edits skip workers automatically</text>
+</svg>
