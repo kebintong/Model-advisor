@@ -19,13 +19,18 @@ Set the active Model Advisor mode to **Full 3-Worker Swarm** for this session
    directly from the main chat.
 3. Follow `skills/model-advisor/SKILL.md` in **Swarm** mode, enforcing all
    **Lean Code Rules** (smallest complete diff, reuse first, delete unused code,
-   1–2 line closing on skipped items/risks) across all three workers on
-   `workspace: "inherit"` using models from `config.json`:
+   1–2 line closing on skipped items/risks) across all three workers spawned via
+   **`swarm(action="add", name=..., model=..., workspace="inherit", brief=...)`**
+   using models from `config.json`:
    - **`navigator`** → default `gemini-4-hydrogen-medium` (read-only)
    - **`advisor`** → default `gemini-4-carbon-high` (read-only)
    - **`coder`** → default `gemini-4-neon-medium` (exclusive writer)
-4. Check `swarm(action="status")` first to reuse sleeping workers and set a
+4. **Do NOT silently substitute `invoke_subagent`** when `swarm` is available.
+   Only if `swarm` is unavailable in this environment (e.g., cloud/remote),
+   state that in 1 line before falling back to tier-based subagents (`flash` /
+   `pro` / `inherit`).
+5. Check `swarm(action="status")` first to reuse sleeping workers and set a
    swarm title with `swarm(action="title", title="...")`.
-5. If the user provided no task text, confirm **Swarm mode** is active in one
+6. If the user provided no task text, confirm **Swarm mode** is active in one
    line and wait for their task.
-6. If the user included a task, execute it immediately in Swarm mode.
+7. If the user included a task, execute it immediately in Swarm mode.

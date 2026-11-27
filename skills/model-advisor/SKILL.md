@@ -100,9 +100,11 @@ Always make it obvious which model is currently doing the work:
 
 ## Step-by-Step Workflow (`hybrid` and `swarm` modes)
 
-Always run `swarm(action="status")` first to reuse sleeping (`waiting`) workers
-rather than spawning duplicates. Set a short swarm title once per task via
-`swarm(action="title", title="...")`.
+- **Always use the `swarm` tool** (`swarm(action="add", name=..., model=..., workspace="inherit", brief=...)`) — **never silently substitute `invoke_subagent`** when `swarm` is available (subagents do not open the Swarm UI or pin exact model IDs).
+- **Cloud/remote fallback:** Only if the `swarm` tool does not exist in this environment, tell the user in 1 line (`Swarm tool unavailable here — falling back to tier-based subagents`) and use `invoke_subagent` (`flash` for `@navigator`, `pro` for `@advisor`, `inherit` for `@coder`).
+- Always run `swarm(action="status")` first to reuse sleeping (`waiting`) workers
+  rather than spawning duplicates. Set a short swarm title once per task via
+  `swarm(action="title", title="...")`.
 
 ### Friendly Swarm Overview (`plan.json`)
 Right after adding workers, write
