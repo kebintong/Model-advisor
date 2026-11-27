@@ -1,0 +1,15 @@
+{
+  "name": "model-advisor",
+  "displayName": "Model Advisor",
+  "version": "1.2.0",
+  "author": "kebintong",
+  "homepage": "https://github.com/kebintong/Model-advisor",
+  "repository": "https://github.com/kebintong/Model-advisor",
+  "logo": "assets/logo.svg",
+  "description": "Multi-model routing with lean-code discipline and a built-in Customize UI. Roles: @navigator (Hydrogen Medium, read-only) maps files/callers/helpers; @advisor (Carbon High, read-only) plans and fixes errors; @coder (Neon Medium, writer) implements and tests. Modes: /model-advisor-hybrid, /model-advisor-swarm, /model-advisor-default.",
+  "suggestedPrompts": [
+    "Plan and implement a minimal feature change using Hydrogen, Carbon, and Neon",
+    "Diagnose this failing build with Carbon and apply the smallest fix with Neon",
+    "/model-advisor-swarm Map and refactor this module, removing dead code"
+  ]
+}
