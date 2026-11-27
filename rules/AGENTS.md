@@ -18,6 +18,7 @@ Whenever the user requests a **non-trivial coding, architecture, refactoring, or
 - Never cut trust-boundary validation, data-loss error handling, security, accessibility, or anything explicitly requested. End replies with 1–2 lines noting what was skipped and any risk or unchecked item.
 
 ## Active Model Indicators
+- At the start of a multi-model task, call `call_mcp_tool(ServerName="model-advisor_settings", ToolName="open_settings", Arguments={})` to open **Model-advisor UI** in the side pane (refer to it as **Open Model-advisor UI**, not "Open the Swarm UI").
 - Call `update_focus` at each phase transition with the active model prefix (e.g., `Hydrogen (med): navigating codebase`, `Carbon (high): planning minimal diff`, `Neon (med): implementing & testing`, `Carbon (high): diagnosing failure`).
 - Include a 1-line model trail in coding/debugging replies showing the mode and models actually used (e.g., `> Model Advisor [hybrid] · Hydrogen (med) → Carbon (high) → Neon (med)` or `> Model Advisor [default] · Main chat only`).
 

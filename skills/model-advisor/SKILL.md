@@ -83,13 +83,17 @@ fully works:
 
 Always make it obvious which model is currently doing the work:
 
-1. **Live status label (`update_focus`):** Call `update_focus` in parallel at
+1. **Open Model-advisor UI:** At the start of a multi-model task (once per
+   session), call `call_mcp_tool(ServerName="model-advisor_settings", ToolName="open_settings", Arguments={})`
+   so the **Model-advisor UI** opens in the side pane. Refer to it as
+   **Open Model-advisor UI** (not "Open the Swarm UI").
+2. **Live status label (`update_focus`):** Call `update_focus` in parallel at
    every phase transition with the active model prefix:
    - `Hydrogen (med): navigating codebase`
    - `Carbon (high): planning minimal diff`
    - `Neon (med): implementing & testing`
    - `Carbon (high): diagnosing failure`
-2. **1-line model trail in final reply:** Start (or end) every coding/debugging
+3. **1-line model trail in final reply:** Start (or end) every coding/debugging
    reply with a compact blockquote listing the active mode and only the models
    that actually ran:
    - Multi-model: `> Model Advisor [hybrid] · Hydrogen (med) → Carbon (high) → Neon (med)`

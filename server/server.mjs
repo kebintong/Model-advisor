@@ -197,8 +197,8 @@ function handleRequest(req) {
         tools: [
           {
             name: "open_settings",
-            title: "Model Advisor",
-            description: "Open the Model Advisor customization UI to configure default mode, role models, and lean-code settings.",
+            title: "Open Model-advisor UI",
+            description: "Open the Model-advisor UI in the side pane (Overview, live Graph, and Customize).",
             inputSchema: { type: "object", properties: {}, additionalProperties: false },
             _meta: {
               ui: { resourceUri: APP_URI },
