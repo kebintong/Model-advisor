@@ -99,7 +99,44 @@ Skip workers entirely for rapid back-and-forth exploration or small changes whil
 
 ### Prerequisites
 - **Google Antigravity** (App, IDE, or CLI `agy`)
-- **Node.js 18+** on `PATH` *(required only for the optional built-in Customize UI MCP server; skills and routing rules work without Node)*
+- **Git** (to clone this repository)
+- **Node.js 18+** on `PATH` *(optional — required only for the built-in Customize UI MCP server; skills and routing rules work without Node)*
+
+#### How to Install Prerequisites
+
+**1. Google Antigravity**
+- Download and install Antigravity from [antigravity.google](https://antigravity.google), then launch and sign in.
+
+**2. Git**
+- **Windows (PowerShell):**
+  ```powershell
+  winget install --id Git.Git -e --source winget
+  ```
+- **macOS (Homebrew):**
+  ```bash
+  brew install git
+  ```
+- **Linux (Ubuntu / Debian):**
+  ```bash
+  sudo apt update && sudo apt install -y git
+  ```
+- Verify: `git --version`
+
+**3. Node.js 18+ *(for the Customize UI)***
+- **Windows (PowerShell):**
+  ```powershell
+  winget install --id OpenJS.NodeJS.LTS -e --source winget
+  ```
+  *(Or download the LTS installer from [nodejs.org](https://nodejs.org) and restart your terminal.)*
+- **macOS (Homebrew):**
+  ```bash
+  brew install node
+  ```
+- **Linux (Ubuntu / Debian):**
+  ```bash
+  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs
+  ```
+- Verify: `node -v` *(must be `v18.0.0` or newer)*
 
 ### Option A: Install via Antigravity CLI *(Recommended)*
 ```bash
