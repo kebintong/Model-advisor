@@ -2,7 +2,7 @@
   "mcpServers": {
     "settings": {
       "command": "node",
-      "args": ["${PLUGIN_ROOT}/server/server.mjs"]
+      "args": ["${PLUGIN_ROOT}/server/server.mjs", "--data-dir=${PLUGIN_DATA}"]
     }
   }
 }

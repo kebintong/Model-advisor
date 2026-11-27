@@ -1,0 +1,30 @@
+{
+  "model-advisor-activity": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node ./hooks/track.mjs SessionStart",
+        "timeout": 3
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "swarm|edit_file|write_file|run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/track.mjs PostToolUse",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node ./hooks/track.mjs Stop",
+        "timeout": 3
+      }
+    ]
+  }
+}

@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
+const dataDirArg = process.argv.find((a) => a.startsWith("--data-dir="));
+const DATA_DIR = dataDirArg ? dataDirArg.slice("--data-dir=".length) : PLUGIN_ROOT;
 const CONFIG_PATH = path.join(PLUGIN_ROOT, "config.json");
+const ACTIVITY_PATH = path.join(DATA_DIR, "activity.json");
 const APP_HTML_PATH = path.join(__dirname, "app.html");
 const APP_URI = "ui://model-advisor/settings.html";
 
@@ -94,11 +97,34 @@ function saveConfig(input) {
   return next;
 }
 
+function readActivity() {
+  const fallback = {
+    activeMember: null,
+    activeEdge: null,
+    updatedAt: null,
+    members: {
+      coordinator: { state: "idle", action: "Ready for next task", updatedAt: null },
+      navigator: { state: "idle", action: "Waiting to scout files", updatedAt: null },
+      advisor: { state: "idle", action: "Waiting to plan or debug", updatedAt: null },
+      coder: { state: "idle", action: "Waiting to implement edits", updatedAt: null },
+    },
+    recentEvents: [],
+  };
+  try {
+    const raw = JSON.parse(fs.readFileSync(ACTIVITY_PATH, "utf8"));
+    if (raw && typeof raw === "object" && raw.members) return raw;
+  } catch {
+    // Missing activity.json before first hook run.
+  }
+  return fallback;
+}
+
 function buildStatePayload(extra = {}) {
   const config = readConfig();
   return {
     ...extra,
     config,
+    activity: readActivity(),
     defaults: DEFAULTS,
     catalog: MODEL_CATALOG,
     configPath: CONFIG_PATH,
