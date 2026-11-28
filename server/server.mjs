@@ -166,10 +166,20 @@ function handleRequest(req) {
         resources: [
           {
             uri: APP_URI,
-            name: "Model Advisor Settings",
-            description: "Customize Model Advisor mode, role models, and lean-code discipline.",
+            name: "Model Advisor",
+            description: "Live Model Advisor graph, team overview, and model customization.",
             mimeType: "text/html;profile=mcp-app",
-            _meta: { ui: { prefersBorder: false } },
+            _meta: {
+              ui: {
+                prefersBorder: false,
+                csp: {
+                  resourceDomains: [
+                    "https://fonts.googleapis.com",
+                    "https://fonts.gstatic.com",
+                  ],
+                },
+              },
+            },
           },
         ],
       });
@@ -186,7 +196,17 @@ function handleRequest(req) {
             uri: APP_URI,
             mimeType: "text/html;profile=mcp-app",
             text: html,
-            _meta: { ui: { prefersBorder: false } },
+            _meta: {
+              ui: {
+                prefersBorder: false,
+                csp: {
+                  resourceDomains: [
+                    "https://fonts.googleapis.com",
+                    "https://fonts.gstatic.com",
+                  ],
+                },
+              },
+            },
           },
         ],
       });
@@ -197,8 +217,8 @@ function handleRequest(req) {
         tools: [
           {
             name: "open_settings",
-            title: "Open Model-advisor UI",
-            description: "Open the Model-advisor UI in the side pane (Overview, live Graph, and Customize).",
+            title: "Open Advisor UI",
+            description: "Open the Advisor UI in the side pane (Overview, live Graph, and Customize).",
             inputSchema: { type: "object", properties: {}, additionalProperties: false },
             _meta: {
               ui: { resourceUri: APP_URI },

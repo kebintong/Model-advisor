@@ -83,10 +83,10 @@ fully works:
 
 Always make it obvious which model is currently doing the work:
 
-1. **Open Model-advisor UI:** At the start of a multi-model task (once per
+1. **Open Advisor UI:** At the start of a multi-model task (once per
    session), call `call_mcp_tool(ServerName="model-advisor_settings", ToolName="open_settings", Arguments={})`
-   so the **Model-advisor UI** opens in the side pane. Refer to it as
-   **Open Model-advisor UI** (not "Open the Swarm UI").
+   so the **Advisor UI** opens in the side pane. Refer to it as
+   **Open Advisor UI** (not "Open the Swarm UI").
 2. **Live status label (`update_focus`):** Call `update_focus` in parallel at
    every phase transition with the active model prefix:
    - `Hydrogen (med): navigating codebase`

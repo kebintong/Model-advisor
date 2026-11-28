@@ -8,14 +8,14 @@ const DATA_DIR = process.env.PLUGIN_DATA || PLUGIN_ROOT;
 const ACTIVITY_PATH = path.join(DATA_DIR, "activity.json");
 
 const DEFAULT_ACTIVITY = () => ({
-  activeMember: "coordinator",
+  activeMember: null,
   activeEdge: null,
   updatedAt: new Date().toISOString(),
   members: {
-    coordinator: { state: "idle", action: "Ready for next task", updatedAt: null },
-    navigator: { state: "idle", action: "Waiting to scout files", updatedAt: null },
-    advisor: { state: "idle", action: "Waiting to plan or debug", updatedAt: null },
-    coder: { state: "idle", action: "Waiting to implement edits", updatedAt: null },
+    coordinator: { state: "idle", action: "Reading the board", updatedAt: null },
+    navigator: { state: "idle", action: "Ready to scout files", updatedAt: null },
+    advisor: { state: "idle", action: "Ready to plan or debug", updatedAt: null },
+    coder: { state: "idle", action: "Ready to implement edits", updatedAt: null },
   },
   recentEvents: [],
 });
@@ -43,6 +43,15 @@ function shortLine(text, fallback) {
   return first.length > 72 ? first.slice(0, 69) + "..." : first;
 }
 
+function inferMember(text, typeName = "") {
+  const hay = `${text || ""} ${typeName || ""}`.toLowerCase();
+  if (/\b(navigator|scout|explore|search|map|read)\b/.test(hay)) return "navigator";
+  if (/\b(advisor|plan|architect|debug|diagnos|review|error)\b/.test(hay)) return "advisor";
+  if (/\b(coder|implement|build|edit|fix|updat|refactor|write)\b/.test(hay)) return "coder";
+  if (typeName.toLowerCase() === "research") return "navigator";
+  return "coder";
+}
+
 function pushEvent(state, member, action, ts) {
   state.recentEvents = [
     { member, action, at: ts },
@@ -66,13 +75,24 @@ async function main() {
 
   if (eventName === "SessionStart") {
     const fresh = DEFAULT_ACTIVITY();
-    fresh.members.coordinator = { state: "idle", action: "Session ready", updatedAt: ts };
+    fresh.members.coordinator = { state: "idle", action: "Reading the board", updatedAt: ts };
     writeActivity(fresh);
     process.stdout.write("{}\n");
     return;
   }
 
   if (eventName === "Stop") {
+    // Keep animation alive while background subagents or swarm workers are still running!
+    if (input.fullyIdle === false) {
+      if (state.activeMember && state.members[state.activeMember]) {
+        state.members[state.activeMember].state = "working";
+      }
+      state.updatedAt = ts;
+      writeActivity(state);
+      process.stdout.write("{}\n");
+      return;
+    }
+
     for (const key of Object.keys(state.members)) {
       if (state.members[key].state === "working") {
         state.members[key].state = "waiting";
@@ -115,11 +135,33 @@ async function main() {
       } else if (action === "kill" && state.members[member]) {
         state.members[member] = { state: "idle", action: "Completed & cleaned up", updatedAt: ts };
         if (state.activeMember === member) {
-          state.activeMember = "coordinator";
+          state.activeMember = null;
           state.activeEdge = null;
         }
         pushEvent(state, member, "Cleaned up worker", ts);
       }
+    } else if (toolName === "invoke_subagent") {
+      const role = typeof args.Role === "string" ? args.Role : "";
+      const typeName = typeof args.TypeName === "string" ? args.TypeName : "";
+      const member = inferMember(`${role} ${args.Prompt || ""}`, typeName);
+      const label = shortLine(role || args.Prompt, `Running @${member} subagent`);
+      state.members[member] = { state: "working", action: label, updatedAt: ts };
+      state.members.coordinator = {
+        state: "working",
+        action: `Delegated to @${member}`,
+        updatedAt: ts,
+      };
+      state.activeMember = member;
+      state.activeEdge = `coordinator->${member}`;
+      pushEvent(state, member, label, ts);
+    } else if (toolName === "send_message") {
+      const msg = typeof args.Message === "string" ? args.Message : "";
+      const member = inferMember(msg);
+      const label = shortLine(msg, `Messaged @${member}`);
+      state.members[member] = { state: "working", action: label, updatedAt: ts };
+      state.activeMember = member;
+      state.activeEdge = `coordinator->${member}`;
+      pushEvent(state, member, label, ts);
     } else if (toolName === "edit_file" || toolName === "write_file") {
       const filePath = typeof args.Path === "string" ? path.basename(args.Path) : "file";
       const label = toolName === "write_file" ? `Writing ${filePath}` : `Editing ${filePath}`;
