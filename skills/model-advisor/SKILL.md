@@ -258,3 +258,35 @@ If verification fails twice, stop and report the exact error to the coordinator.
   no follow-ups are expected. Never kill a worker with unmerged work.
 - **Quota / availability issues:** If a pinned model hits quota or fails, report
   it to the user and ask before switching models via `swarm(action="model", ...)`.
+
+---
+
+## Read-Only Review & Audit Protocol (Triggered from Advisor UI or Chat)
+
+When asked to **Review** (a diff/commit/files) or **Audit** (a folder or whole
+repo), produce a **one-shot read-only report** — change **no code**:
+
+1. **Map (`@navigator` / Hydrogen, read-only):**
+   - *Review:* Read the diff (uncommitted changes or last commit if unspecified),
+     touched callers, tests, and expected load.
+   - *Audit:* Read README, build/deploy config, dependencies, entry points,
+     tests, and trace critical flows (user input, auth, money, data writes,
+     shared state).
+2. **Analyze (`@advisor` / Carbon, read-only)** in priority order:
+   1. **Bug** — wrong result, crash, missed edge case, broken caller.
+   2. **Risk** — security holes, secrets, missing input checks, data loss.
+   3. **Scale** — races, unbounded growth, N+1 queries, O(n²) on real load.
+   4. **Missing test** — risky logic without a test that fails when it breaks.
+   5. **Speed** — real slowdowns or repeated hot-loop work.
+   6. **Lean** — dead code to delete, helpers to reuse, stdlib/native swaps,
+      unnecessary deps, YAGNI layers, duplicates to merge, or mixed-job splits.
+3. **Verify before reporting:** Every finding needs a concrete failing case;
+   confirm unused code by grepping the whole tree; respect `shortcut:` comments
+   unless expected load crosses the limit; no vague style taste.
+4. **Output format (plain English):**
+   - Start with `What this change/repo does:` (2–3 sentences + assumed load).
+   - Group numbered findings (max 20) into **Must fix**, **Should fix**, **Nice
+     to have** (skip empty groups). Each finding has: **What this is**,
+     **Problem**, **Fix** (smallest fix, prefer deleting code), **If we skip it**.
+   - End with `Verdict:`, `Lean: -<N> lines possible.` (when applicable), and
+     `Not checked:`.

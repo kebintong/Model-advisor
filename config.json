@@ -2,8 +2,8 @@
   "defaultMode": "swarm",
   "models": {
     "navigator": "gemini-4-hydrogen-low",
-    "advisor": "gemini-4-carbon-high",
-    "coder": "gemini-4-neon-high"
+    "advisor": "gemini-4-neon-medium",
+    "coder": "gemini-4-carbon-high"
   },
   "leanCode": true
 }
